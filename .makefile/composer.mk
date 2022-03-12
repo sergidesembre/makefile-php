@@ -5,9 +5,16 @@ ifneq (,$(findstring i, $(MAKEFLAGS)))
 COMPOSER_OPTIONS += "--ignore-platform-reqs"
 endif
 
+.PHONY : install
 install: DEPS_ACTION = install $(COMPOSER_OPTIONS)
+
+.PHONY : update
 update: DEPS_ACTION = update $(COMPOSER_OPTIONS)
+
+.PHONY : require
 require: DEPS_ACTION = require $(package) $(COMPOSER_OPTIONS)
+
+.PHONY : remove
 remove: DEPS_ACTION = rm -rf vendor composer.lock
 
 install update require remove:
