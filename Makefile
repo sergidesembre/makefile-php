@@ -16,19 +16,28 @@
 #                                                                                                                     #
 #######################################################################################################################
 
+
 SHELL = /bin/sh
 MAKEFILE_DIR := $(CURDIR)/.makefile
 
 ## DOCKER
+.PHONY : start
 start: DOCKER_TARGET = start docker_file=$(MK_DOCKER_COMPOSE_FILE)
+
+.PHONY : stop
 stop: DOCKER_TARGET = stop
 
 start stop:
 	@$(MAKE) --directory $(MAKEFILE_DIR) -f docker-compose.mk $(DOCKER_TARGET)
 
 ## DEPENDENCIES
+.PHONY : deps/install
 deps/install: DEPS_TARGET = install
+
+.PHONY : deps/update
 deps/update: DEPS_TARGET = update
+
+.PHONY : deps/add
 deps/add: DEPS_TARGET = require package=$(package)
 
 deps/install deps/update deps/add:
