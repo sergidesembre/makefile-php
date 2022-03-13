@@ -16,9 +16,13 @@
 #                                                                                                                     #
 #######################################################################################################################
 
-
 SHELL = /bin/sh
 MAKEFILE_DIR := $(CURDIR)/.makefile
+DOTENV_FILE ?= .env
+
+ifeq ("$(wildcard $(CURDIR)/$(DOTENV_FILE))","")
+DOTENV_FILE := .env.dist
+endif
 
 ## DOCKER
 .PHONY : start
@@ -43,4 +47,4 @@ deps/add: DEPS_TARGET = require package=$(package)
 deps/install deps/update deps/add:
 	@$(MAKE) --directory $(MAKEFILE_DIR) -f composer.mk $(DEPS_TARGET)
 
-include .env
+include $(CURDIR)/$(DOTENV_FILE)
