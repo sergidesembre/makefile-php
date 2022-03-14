@@ -24,27 +24,33 @@ ifeq ("$(wildcard $(CURDIR)/$(DOTENV_FILE))","")
 DOTENV_FILE := .env.dist
 endif
 
-## DOCKER
+## --- DOCKER
 .PHONY : start
-start: DOCKER_TARGET = start docker_file=$(MK_DOCKER_COMPOSE_FILE)
+start: DOCKER_COMPOSE_ACTION = start docker_file=$(MK_DOCKER_COMPOSE_FILE)
 
 .PHONY : stop
-stop: DOCKER_TARGET = stop
+stop: DOCKER_COMPOSE_ACTION = stop
 
-start stop:
-	@$(MAKE) --directory $(MAKEFILE_DIR) -f docker-compose.mk $(DOCKER_TARGET)
-
-## DEPENDENCIES
+## --- DEPENDENCIES
 .PHONY : deps/install
-deps/install: DEPS_TARGET = install
+deps/install: COMPOSER_ACTION = install
 
 .PHONY : deps/update
-deps/update: DEPS_TARGET = update
+deps/update: COMPOSER_ACTION = update
 
 .PHONY : deps/add
-deps/add: DEPS_TARGET = require package=$(package)
+deps/add: COMPOSER_ACTION = require package=$(package)
 
-deps/install deps/update deps/add:
-	@$(MAKE) --directory $(MAKEFILE_DIR) -f composer.mk $(DEPS_TARGET)
+## --- QUALITY
+quality: DOCKER_COMPOSE_ACTION = exec image=$(MK_PHP_IMAGE) command=quality
+
+## --- OTHERS
+clear: COMPOSER_ACTION = remove
+
+start stop tests tests/unit tests/functional tests/integration tests/e2e quality:
+	@$(MAKE) --directory $(MAKEFILE_DIR) -f docker-compose.mk $(DOCKER_COMPOSE_ACTION)
+
+deps/install deps/update deps/add clear:
+	@$(MAKE) --directory $(MAKEFILE_DIR) -f composer.mk $(COMPOSER_ACTION)
 
 include $(CURDIR)/$(DOTENV_FILE)
