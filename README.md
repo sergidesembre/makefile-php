@@ -14,8 +14,14 @@ Composer version 2.2
 ```
 
 ## How to use
-Easy! Only needs to copy ```Makefile``` file and ```.makefile``` folder with all content so you can start to use.
+Easy! Only needs to copy ```Makefile```, ```.env.dist``` files and ```.makefile``` folder with all content so you can start to use.
 
 The principal file have all targets organized by namespaces. Each target set value of variables and that execute make into specific .mk file from ```.makefile``` folder.
 
 When execute targets of ```quality``` or ```tests``` namespaces never must execute directly command, it's a good option to define script command in ```composer.json``` file with custom options, this way all coworkers can use command with options, it's more encapsulated and cohesive.
+
+The Makefile load environment variables from ```.env.dist``` if doesn't exist ```.env``` file.
+
+Necessary environment variables required:
+- MK_PHP_IMAGE
+- MK_DOCKER_COMPOSE_FILE
